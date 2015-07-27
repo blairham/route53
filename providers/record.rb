@@ -92,7 +92,7 @@ action :create do
   end
 
   def same_record?(record)
-    name.eql?(record.name) &&
+    name.eql?(record.name.chomp(".")) &&
       same_value?(record) &&
         ttl.eql?(record.ttl.to_i)
   end
@@ -115,11 +115,11 @@ action :create do
     create
     Chef::Log.info "Record created: #{name}"
   elsif !same_record?(record)
-    unless overwrite == false
+    if overwrite
       record.destroy
       create
       Chef::Log.info "Record modified: #{name}"
-   else
+    else
       Chef::Log.info "Record #{name} should have been modified, but overwrite is set to false."
       Chef::Log.debug "Current value: #{record.value.first}"
       Chef::Log.debug "Desired value: #{value}"
