@@ -1,3 +1,5 @@
+## v0.4.2
+* fix the provider to correctly identify existing records
 ## v0.4.0
 * make "name" the name_attribute of a resource
 * depends on xml to support installing nokogiri and fog dependency

@@ -92,7 +92,7 @@ action :create do
   end
 
   def same_record?(record)
-    name.eql?(record.name.chomp(".")) &&
+    name.chomp(".").eql?(record.name.chomp(".")) &&
       same_value?(record) &&
         ttl.eql?(record.ttl.to_i)
   end
