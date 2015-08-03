@@ -1,3 +1,5 @@
+## v0.5.0
+* Change provider to use the AWS SDK v2 gem instead of fog
 ## v0.4.2
 * fix the provider to correctly identify existing records
 ## v0.4.0
