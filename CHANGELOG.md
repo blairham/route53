@@ -1,3 +1,5 @@
+## v0.5.1
+* Change delete record in provider to behave gracefully when the record doesn't exist
 ## v0.5.0
 * Change provider to use the AWS SDK v2 gem instead of fog
 ## v0.4.2
