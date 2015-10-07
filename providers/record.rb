@@ -26,20 +26,17 @@ action :create do
   end
 
   count = 0
-  while count <= record_wait_tries do
-    begin
-      create_record(new_resource.name, new_resource.value, new_resource.region, new_resource.zone_id, new_resource.type, new_resource.ttl)
-    rescue Aws::Route53::Errors::PriorRequestNotComplete
-      if count >= record_wait_tries
-        Chef::Application.fatal("Too many retries waiting for record to complete")
-      else
-        Chef::Log.info("Waiting for another record to complete")
-        sleep(record_wait_time)
-        count += 1
-      end
-      next
+  begin
+    create_record(new_resource.name, new_resource.value, new_resource.region, new_resource.zone_id, new_resource.type, new_resource.ttl)
+  rescue Aws::Route53::Errors::PriorRequestNotComplete
+    if count >= record_wait_tries
+      Chef::Application.fatal("Too many retries waiting for record to complete")
+    else
+      Chef::Log.info("Waiting for another record to complete")
+      sleep(record_wait_time)
+      count += 1
     end
-    break
+    retry
   end
 end
 
@@ -70,19 +67,16 @@ action :delete do
   end
 
   count = 0
-  while count <= record_wait_tries do
-    begin
-      delete_record(new_resource.name, new_resource.region, new_resource.zone_id, new_resource.type)
-    rescue Aws::Route53::Errors::PriorRequestNotComplete
-      if count >= record_wait_tries
-        Chef::Application.fatal("Too many retries waiting for record to complete")
-      else
-        Chef::Log.info("Waiting for another record to complete")
-        sleep(record_wait_time)
-        count += 1
-      end
-      next
+  begin
+    delete_record(new_resource.name, new_resource.region, new_resource.zone_id, new_resource.type)
+  rescue Aws::Route53::Errors::PriorRequestNotComplete
+    if count >= record_wait_tries
+      Chef::Application.fatal("Too many retries waiting for record to complete")
+    else
+      Chef::Log.info("Waiting for another record to complete")
+      sleep(record_wait_time)
+      count += 1
     end
-    break
+    retry
   end
 end
