@@ -1,3 +1,6 @@
+record_wait_time = 20
+record_wait_tries = 10
+
 action :create do
   require 'aws-sdk-core'
 
@@ -22,7 +25,22 @@ action :create do
     )
   end
 
-  create_record(new_resource.name, new_resource.value, new_resource.region, new_resource.zone_id, new_resource.type, new_resource.ttl)
+  count = 0
+  while count <= record_wait_tries do
+    begin
+      create_record(new_resource.name, new_resource.value, new_resource.region, new_resource.zone_id, new_resource.type, new_resource.ttl)
+    rescue Aws::Route53::Errors::PriorRequestNotComplete
+      if count >= record_wait_tries
+        Chef::Application.fatal("Too many retries waiting for record to complete")
+      else
+        Chef::Log.info("Waiting for another record to complete")
+        sleep(record_wait_time)
+        count += 1
+      end
+      next
+    end
+    break
+  end
 end
 
 action :delete do
@@ -51,5 +69,20 @@ action :delete do
     end
   end
 
-  delete_record(new_resource.name, new_resource.region, new_resource.zone_id, new_resource.type)
+  count = 0
+  while count <= record_wait_tries do
+    begin
+      delete_record(new_resource.name, new_resource.region, new_resource.zone_id, new_resource.type)
+    rescue Aws::Route53::Errors::PriorRequestNotComplete
+      if count >= record_wait_tries
+        Chef::Application.fatal("Too many retries waiting for record to complete")
+      else
+        Chef::Log.info("Waiting for another record to complete")
+        sleep(record_wait_time)
+        count += 1
+      end
+      next
+    end
+    break
+  end
 end
