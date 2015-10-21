@@ -1,3 +1,7 @@
+## v0.5.3
+* Add throttling error
+## v0.5.2
+* Add sleep and retry for record update lock
 ## v0.5.1
 * Change delete record in provider to behave gracefully when the record doesn't exist
 ## v0.5.0

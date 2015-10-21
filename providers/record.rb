@@ -1,5 +1,10 @@
-record_wait_time = 20
-record_wait_tries = 10
+# 'definied?' is for chefspec warnings
+RECORD_WAIT_TIME = 20 unless defined? RECORD_WAIT_TIME
+RECORD_WAIT_TRIES = 10 unless defined? RECORD_WAIT_TRIES
+ROUTE53_ERRORS = [
+  Aws::Route53::Errors::PriorRequestNotComplete,
+  Aws::Route53::Errors::Throttling
+] unless defined? ROUTE53_ERRORS
 
 action :create do
   require 'aws-sdk-core'
@@ -28,12 +33,12 @@ action :create do
   count = 0
   begin
     create_record(new_resource.name, new_resource.value, new_resource.region, new_resource.zone_id, new_resource.type, new_resource.ttl)
-  rescue Aws::Route53::Errors::PriorRequestNotComplete
-    if count >= record_wait_tries
-      Chef::Application.fatal("Too many retries waiting for record to complete")
+  rescue *ROUTE53_ERRORS => e
+    if count >= RECORD_WAIT_TRIES
+      Chef::Application.fatal("Too many retries waiting for record to complete: #{e}")
     else
-      Chef::Log.info("Waiting for another record to complete")
-      sleep(record_wait_time)
+      Chef::Log.info("Waiting for another record to complete or throttling. Try #{count} of #{RECORD_WAIT_TRIES}")
+      sleep(RECORD_WAIT_TIME)
       count += 1
     end
     retry
@@ -69,12 +74,12 @@ action :delete do
   count = 0
   begin
     delete_record(new_resource.name, new_resource.region, new_resource.zone_id, new_resource.type)
-  rescue Aws::Route53::Errors::PriorRequestNotComplete
-    if count >= record_wait_tries
-      Chef::Application.fatal("Too many retries waiting for record to complete")
+  rescue *ROUTE53_ERRORS => e
+    if count >= RECORD_WAIT_TRIES
+      Chef::Application.fatal("Too many retries waiting for record to complete: #{e}")
     else
-      Chef::Log.info("Waiting for another record to complete")
-      sleep(record_wait_time)
+      Chef::Log.info("Waiting for another record to complete or throttling. Try #{count} of #{RECORD_WAIT_TRIES}")
+      sleep(RECORD_WAIT_TIME)
       count += 1
     end
     retry
