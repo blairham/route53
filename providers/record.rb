@@ -1,3 +1,5 @@
+require 'aws-sdk-core'
+
 # 'defined?' is for chefspec warnings since file may be loaded multiple times
 RECORD_WAIT_TIME = 20 unless defined? RECORD_WAIT_TIME
 RECORD_WAIT_TRIES = 10 unless defined? RECORD_WAIT_TRIES
@@ -7,8 +9,6 @@ ROUTE53_ERRORS = [
 ] unless defined? ROUTE53_ERRORS
 
 action :create do
-  require 'aws-sdk-core'
-
   def create_record(name, value, region, zone_id, record_type, ttl)
     @route53 ||= Aws::Route53::Client.new(region: region)
     Chef::Log.debug "Record for #{name} to #{value} of type #{record_type}"
@@ -46,8 +46,6 @@ action :create do
 end
 
 action :delete do
-  require 'aws-sdk-core'
-
   def delete_record(name, region, zone_id, record_type)
     @route53 ||= Aws::Route53::Client.new(region: region)
     Chef::Log.debug "Deleting record for #{name} of type #{record_type}"
