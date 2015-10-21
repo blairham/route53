@@ -1,3 +1,5 @@
+## v0.5.4
+* Import aws-sdk-core at beginning of provider
 ## v0.5.3
 * Add throttling error
 ## v0.5.2
