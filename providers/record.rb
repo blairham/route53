@@ -1,4 +1,4 @@
-# 'definied?' is for chefspec warnings
+# 'defined?' is for chefspec warnings since file may be loaded multiple times
 RECORD_WAIT_TIME = 20 unless defined? RECORD_WAIT_TIME
 RECORD_WAIT_TRIES = 10 unless defined? RECORD_WAIT_TRIES
 ROUTE53_ERRORS = [
