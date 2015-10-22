@@ -34,6 +34,5 @@ ROUTE53_ERRORS = [
   Aws::Route53::Errors::Throttling
 ] unless defined? ROUTE53_ERRORS
 
-
 require 'rubygems'
 Gem.clear_paths
