@@ -1,3 +1,5 @@
+## v0.5.5
+* Install aws-sdk-core at compile time
 ## v0.5.4
 * Import aws-sdk-core at beginning of provider
 ## v0.5.3

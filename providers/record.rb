@@ -1,13 +1,3 @@
-require 'aws-sdk-core'
-
-# 'defined?' is for chefspec warnings since file may be loaded multiple times
-RECORD_WAIT_TIME = 20 unless defined? RECORD_WAIT_TIME
-RECORD_WAIT_TRIES = 10 unless defined? RECORD_WAIT_TRIES
-ROUTE53_ERRORS = [
-  Aws::Route53::Errors::PriorRequestNotComplete,
-  Aws::Route53::Errors::Throttling
-] unless defined? ROUTE53_ERRORS
-
 action :create do
   def create_record(name, value, region, zone_id, record_type, ttl)
     @route53 ||= Aws::Route53::Client.new(region: region)

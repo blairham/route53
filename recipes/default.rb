@@ -17,10 +17,23 @@
 # limitations under the License.
 #
 chef_gem "aws-sdk-core" do
-  compile_time false
+  compile_time true
   action :install
   version node['route53']['aws_sdk_version']
 end
+
+require 'aws-sdk-core'
+
+# Putting this in library causes an error since gem is not available when
+# libraries are loaded
+# 'defined?' is for chefspec warnings since file may be loaded multiple times
+RECORD_WAIT_TIME = 20 unless defined? RECORD_WAIT_TIME
+RECORD_WAIT_TRIES = 10 unless defined? RECORD_WAIT_TRIES
+ROUTE53_ERRORS = [
+  Aws::Route53::Errors::PriorRequestNotComplete,
+  Aws::Route53::Errors::Throttling
+] unless defined? ROUTE53_ERRORS
+
 
 require 'rubygems'
 Gem.clear_paths
