@@ -1,3 +1,5 @@
+## v0.5.6
+* Put constants in provider namespace
 ## v0.5.5
 * Install aws-sdk-core at compile time
 ## v0.5.4
