@@ -32,7 +32,7 @@ require 'aws-sdk-core'
 ::Chef::Provider::ROUTE53_ERRORS = [
   Aws::Route53::Errors::PriorRequestNotComplete,
   Aws::Route53::Errors::Throttling
-] unless defined? ROUTE53_ERRORS
+] unless defined? ::Chef::Provider::ROUTE53_ERRORS
 
 require 'rubygems'
 Gem.clear_paths
